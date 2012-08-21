@@ -1,0 +1,34 @@
+diff -aurN lua-5.1.5.orig/src/Makefile lua-5.1.5/src/Makefile
+--- lua-5.1.5.orig/src/Makefile	2012-08-02 23:18:51.566012694 +0200
++++ lua-5.1.5/src/Makefile	2012-08-02 23:23:04.724877352 +0200
+@@ -39,20 +39,28 @@
+ ALL_T= $(LUA_A) $(LUA_T) $(LUAC_T)
+ ALL_A= $(LUA_A)
+ 
++V=5.1
++
+ default: $(PLAT)
+ 
+-all:	$(ALL_T)
++all:	so $(ALL_T)
++
++so:	liblua.so
+ 
+ o:	$(ALL_O)
+ 
+ a:	$(ALL_A)
+ 
++liblua.so: $(CORE_O) $(LIB_O)
++	$(CC) -o liblua.so.$V -shared $(CORE_O) $(LIB_O) -Wl,-soname=liblua.so.$V -lm -ldl
++	ln -sf liblua.so.$V liblua.so
++
+ $(LUA_A): $(CORE_O) $(LIB_O)
+ 	$(AR) $@ $(CORE_O) $(LIB_O)	# DLL needs all object files
+ 	$(RANLIB) $@
+ 
+ $(LUA_T): $(LUA_O) $(LUA_A)
+-	$(CC) -o $@ $(MYLDFLAGS) $(LUA_O) $(LUA_A) $(LIBS)
++	$(CC) -o $@ $(MYLDFLAGS) $(LUA_O) -L. -llua $(LIBS)
+ 
+ $(LUAC_T): $(LUAC_O) $(LUA_A)
+ 	$(CC) -o $@ $(MYLDFLAGS) $(LUAC_O) $(LUA_A) $(LIBS)
