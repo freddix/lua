@@ -1,7 +1,7 @@
 Summary:	A simple lightweight powerful embeddable programming language
 Name:		lua
 Version:	5.1.5
-Release:	1
+Release:	2
 License:	MIT
 Group:		Development/Languages
 Source0:	http://www.lua.org/ftp/lua-%{version}.tar.gz
@@ -42,8 +42,8 @@ language.
 %setup -q
 %patch0 -p1
 
-sed -r -i 's|(#define LUA_ROOT.*)%{_prefix}/local/|\1%{_prefix}/|g' src/luaconf.h
-sed -r -i 's|(#define LUA_CDIR.*)lib/|\1%{_lib}/|g' src/luaconf.h
+%{__sed} -r -i 's|(#define LUA_ROOT.*)%{_prefix}/local/|\1%{_prefix}/|g' src/luaconf.h
+%{__sed} -r -i 's|(#define LUA_CDIR.*)lib/|\1%{_lib}/|g' src/luaconf.h
 
 %build
 %{__make} all \
